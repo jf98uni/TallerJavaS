@@ -8,7 +8,8 @@
         this.playing = false;
         this.game_over = false;
         this.bars = [];
-        this.ball = null;    
+        this.ball = null;
+        this.playing = false;    
     }
 
 
@@ -18,7 +19,7 @@
     self.Board.prototype = {
         get elements (){
 
-            var elements = this.bars;
+            var elements = this.bars.map(function(bar){return bar;});
             elements.push(this.ball);
             return elements;
 
@@ -27,19 +28,31 @@
     }
 })();
 
+// esta construye la pelota, le proporciona todos los atributos 
 (function (){
     self.Ball = function(x,y,radius,board){
 
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.speed_y= 0;
-        this.speed_x=3;
+        this.speed_y= -2;
+        this.speed_x=-1;
         this.board = board;
         board.ball = this;
         this.kind = "circle"
-
+        this.direction = 1;
     }
+
+        self.Ball.prototype = {
+
+            move: function(){
+                this.x += (this.speed_x * this.direction);
+                this.y += (this.speed_y * this.direction);
+
+            }
+        }
+
+    
 })();
 
 (function(){
@@ -110,9 +123,12 @@
         },
         // esto dibuja y borra la barra 
         play: function(){
-
+            if(this.board.playing){
             this.clean();
             this.draw();
+            this.board.ball.move();
+            }
+            
         }
     }
 
@@ -151,24 +167,35 @@ var ball = new Ball(350,350,10,board);
 
 // esto sube y baja la barra
 document.addEventListener("keydown",function(ev){
-    ev.preventDefault();
+    
     // sube con flecha arriba y baja con flecha abajo la barra de la izquierda 
-    if(ev.keyCode == 38){
+    if(ev.keyCode === 38){
+        ev.preventDefault();
         bar.up();
     }
-    else if (ev.keyCode == 40){
+    else if (ev.keyCode === 40){
+        ev.preventDefault();
         bar.down();
     }
     // sube con w y baja con s la barra de la derecha 
-    else if(ev.keyCode == 87){
+    else if(ev.keyCode === 87){
+        ev.preventDefault();
         bar_2.up();
     }
-    else if (ev.keyCode == 83){
+    else if (ev.keyCode === 83){
+        ev.preventDefault();
         bar_2.down();
+    }
+    else if (ev.keyCode === 32){
+        ev.preventDefault();
+        board.playing = !board.playing;
+
     }
     
 });
 // llama a la animacion 
+
+board_view.draw();
 window.requestAnimationFrame(controller);
 
 // ejecuta las clases o las llama a iniciarse
