@@ -46,7 +46,7 @@
         this.kind = "circle"
 
     }
-
+        
         self.Ball.prototype = {
 
             move: function(){
@@ -54,6 +54,7 @@
                 this.y += (this.speed_y );
 
             },
+            // le da valores a los parametros width yheight 
             get width (){
 
                 return this.radius * 2;
@@ -152,6 +153,7 @@
             };
         },
 
+        // le da los parametros a hit
         check_collisions: function() {
             for (var i = this.board.bars.length -1 ; i >= 0; i--){
 
